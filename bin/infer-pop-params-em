@@ -89,7 +89,7 @@ for likedata in args.likedata:
 	data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
 	if args.verbose: print(likedata)
 	
-	wts = np.ones(np.size(likedata) # changed this to just be a column of ones since all the weights are the same for each pulsar
+	wts = np.ones(np.size(likedata)) # changed this to just be a column of ones since all the weights are the same for each pulsar
 
 	psr_m = data[args.col[0]] # this was initially m1s but since we just want one mass there's only this now
 	# got rid of m2s, dls, and zs b/c we don't need them anymore
