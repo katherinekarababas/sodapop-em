@@ -22,7 +22,7 @@ parser = ArgumentParser(description=__doc__)
 parser.add_argument('popparams')
 parser.add_argument('likedata', nargs='+')
 parser.add_argument('-C', '--clas', help='bns or nsbh classification of each event, DEFAULT="bns bns nsbh ..."', default=False, nargs='+')
-parser.add_argument('-c', '--col', help='name of mass1, mass2, distance and likelihood data columns to use, DEFAULT="m1 m2 dL z likelihood"', default=['m1','m2','dL','z','likelihood'], nargs='+')
+parser.add_argument('-c', '--col', help='name of pulsar mass, DEFAULT="psr_mass"', default=['psr_mass'], nargs='+') #changed this here to only involve the pulsar mass ??
 parser.add_argument('-l', '--nlike', help='number of likelihood samples to use, DEFAULT=1e3', default=1e3)
 parser.add_argument('-p', '--popmod', help='name of BNS and NSBH population models, DEFAULT="unif_m1m2 unif_m1_unif_m2_qpair"', default=["unif_m1m2","unif_m1_unif_m2_qpair"], nargs=2)
 parser.add_argument('-P', '--priors', help='prior distribution and hyperparameters for each population parameter, DEFAULT="mmin,mmax+flat12,1.,1.5,1.5,3."', default="mmin,mmax+flat12,1.,1.5,1.5,3.", nargs='+')
@@ -89,12 +89,12 @@ for likedata in args.likedata:
 	data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
 	if args.verbose: print(likedata)
 	
-	wts = np.ones(np.size(likedata) #changed this to just be a column of ones since all the weights are the same for each pulsar
+	wts = np.ones(np.size(likedata) # changed this to just be a column of ones since all the weights are the same for each pulsar
 
-	psr_m = data[args.col[0]] #this was initially m1s but since we just want one mass there's only this now
-	#got rid of m2s, dls, and zs b/c we don't need them anymore
-	ids = np.random.choice(range(len(psr_m)),N_LIKES,replace=True,p=wts/np.sum(wts)) #only changed the name of the variable in this line to take the pulsar mass
-	samps = [np.array(psr_m[ids])] #got rid of all the columns that we no longer need (ie. m2s, ds, and zs)
+	psr_m = data[args.col[0]] # this was initially m1s but since we just want one mass there's only this now
+	# got rid of m2s, dls, and zs b/c we don't need them anymore
+	ids = np.random.choice(range(len(psr_m)),N_LIKES,replace=True,p=wts/np.sum(wts)) # only changed the name of the variable in this line to take the pulsar mass
+	samps = [np.array(psr_m[ids])] # got rid of all the columns that we no longer need (ie. m2s, ds, and zs)
 	
 	likesamps.append(samps)
 
