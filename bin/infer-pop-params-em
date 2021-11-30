@@ -21,7 +21,7 @@ import sodapop.diagnostics as dgn
 parser = ArgumentParser(description=__doc__)
 parser.add_argument('popparams')
 parser.add_argument('likedata', nargs='+')
-parser.add_argument('-C', '--clas', help='bns or nsbh classification of each event, DEFAULT="bns bns nsbh ..."', default=False, nargs='+')
+parser.add_argument('-C', '--clas', help='psr classification of each event, DEFAULT="psr ..."', default=False, nargs='+')
 parser.add_argument('-c', '--col', help='name of pulsar mass, DEFAULT="source_mass"', default=['sourse_mass'], nargs='+') #changed this here to only involve the pulsar mass ??
 parser.add_argument('-l', '--nlike', help='number of likelihood samples to use, DEFAULT=1e3', default=1e3)
 parser.add_argument('-p', '--popmod', help='name of BNS and NSBH population models, DEFAULT="unif_m1m2 unif_m1_unif_m2_qpair"', default=["unif_m1m2","unif_m1_unif_m2_qpair"], nargs=2)
