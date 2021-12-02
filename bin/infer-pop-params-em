@@ -88,10 +88,9 @@ for likedata in args.likedata:
 
 	data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
 	if args.verbose: print(likedata)
-	
-	wts = np.ones(np.size(likedata)) # changed this to just be a column of ones since all the weights are the same for each pulsar
 
 	psr_m = data[args.col[0]] # this was initially m1s but since we just want one mass there's only this now
+	wts = np.ones(len(psr_m)) 
 	# got rid of m2s, dls, and zs b/c we don't need them anymore
 	ids = np.random.choice(range(len(psr_m)),N_LIKES,replace=True,p=wts/np.sum(wts)) # only changed the name of the variable in this line to take the pulsar mass
 	samps = [np.array(psr_m[ids])] # got rid of all the columns that we no longer need (ie. m2s, ds, and zs)
