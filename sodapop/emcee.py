@@ -20,21 +20,16 @@ def loglikelihood(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_mod
 
 	num_obs = len(obs_data)
 
-	bns_lambda = [lambda_dict[param](lambdaa) for param in lambda_dict.keys()]
-	if 'beta' in lambda_dict.keys(): nsbh_lambda = bns_lambda[:-1]+lambdabh
-	else: nsbh_lambda = bns_lambda+lambdabh
-	
-	lambdas = {'bns': bns_lambda, 'nsbh': nsbh_lambda}
+	psr_lambda = [lambda_dict[param](lambdaa) for param in lambda_dict.keys()]
 	
 	log_like = 0.
 	for i,likedata in enumerate(obs_data):
 	
 		obs_class = obs_classes[i]
 		pop_model = pop_models[obs_class]
-		lambda_subset = lambdas[obs_class]
 		
 		m1s,m2s,dls,zs = likedata
-		like_num = np.sum(pop_model(m1s,m2s,lambda_subset) * dist_func(dls,*dist_params))
+		like_num = np.sum(pop_model(m1s,m2s,psr_lambda) * dist_func(dls,*dist_params))
 			
 		log_like += np.log(like_num)
 		
