@@ -58,7 +58,7 @@ if args.verbose: print('walkers: {0}, burn in: {1}, target posterior samples: {2
 pop_models_list = [pop.get_pop_prior(popmod) for popmod in args.popmod]
 pop_models = {'psr': pop_models_list} # get population models
 
-pop_param_names = (pop.get_pop_params(args.popmod[0])).split(',') # get population parameters from first-specified population model, check that they match what's in the prior samples later
+pop_param_names = (pop.get_pop_params(args.popmod)).split(',') # get population parameters from first-specified population model, check that they match what's in the prior samples later
 
 lambdabh = [float(bhparam) for bhparam in args.bhpop] # fixed nsbh population model parameters
 
