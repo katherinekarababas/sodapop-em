@@ -43,7 +43,7 @@ parser.add_argument('-v', '--verbose', action='store_true', default=False)
 args = parser.parse_args()
 
 if args.outpath: out_path = args.outpath
-else: out_path = os.path.dirname(args.likedata[0])+'/'+args.popmod[0]+'.csv'
+else: out_path = os.path.dirname(args.likedata[0])+'/'+args.popmod+'.csv'
 
 N_WALKERS = int(args.nwalk)
 N_BURNIN = int(args.nburn)
@@ -55,7 +55,7 @@ if args.verbose: print('walkers: {0}, burn in: {1}, target posterior samples: {2
 
 ### LOAD POPULATION MODEL AND PRIORS
 
-pop_models_list = [pop.get_pop_prior(popmod) for popmod in args.popmod]
+pop_models_list = pop.get_pop_prior(args.popmod)
 pop_models = {'psr': pop_models_list} # get population models
 
 pop_param_names = (pop.get_pop_params(args.popmod)).split(',') # get population parameters from first-specified population model, check that they match what's in the prior samples later
