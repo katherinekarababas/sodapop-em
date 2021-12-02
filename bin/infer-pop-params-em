@@ -97,7 +97,7 @@ for likedata in args.likedata:
 	
 	likesamps.append(samps)
 
-if args.clas == False or args.clas == 'False': obs_classes = ['bns' for likedata in args.likedata]
+if args.clas == False or args.clas == 'False': obs_classes = ['psr' for likedata in args.likedata]
 else: obs_classes = [str(clas) for clas in args.clas]
 
 ### INFER POPULATION
