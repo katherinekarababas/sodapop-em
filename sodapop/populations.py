@@ -98,8 +98,6 @@ def bimodcut_mass(m,lambdaa): # double gaussian mass distribution with high- and
 	
 	return np.where((m > mmax) | (m < mmin), z, p)
 
-def peakcut_m1m2(m1,m2,lambdaa): # gaussian distribution in masses with high- and low-mass cutoffs, subject to m1 >= m2 convention
-
 def unif_m1m2(m1,m2,lambdaa): # uniform distribution in masses, subject to m1 >= m2 convention
 
 	if np.isscalar(m1): m1 = np.array([m1])
