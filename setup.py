@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 __usage__ = "setup.py command [--options]"
 __description__ = "standard install script"
-__author__ = "pgjlandry@gmail.com"
+__author__ = "katherine.karababas@mail.utoronto.ca"
 
 #-------------------------------------------------
 
@@ -11,9 +11,9 @@ import glob
 setup(
     name = 'sodapop',
     version = '0.0',
-    url = 'https://github.com/landryp/sodapop',
+    url = 'https://github.com/katherinekarababas/sodapop-em',
     author = __author__,
-    author_email = 'pgjlandry@gmail.com',
+    author_email = 'katherine.karababas@mail.utoronto.ca',
     description = __description__,
     license = '',
     scripts = glob.glob('bin/*'),

@@ -1,5 +1,5 @@
 # sodapop
-Tools for neutron star population modeling and inference with gravitational-wave observations.
+Tools for neutron star population modeling and inference with gravitational-wave and electromagnetic observations.
 
 ### Scripts
 
