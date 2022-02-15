@@ -89,76 +89,76 @@ padm1_ub, padm2_ub, ppdm1_ub, ppdm2_ub = [], [], [], []
 
 for m in mgrid:
 
-	m1counts_per_model, m2counts_per_model, obs_m1counts_per_model, obs_m2counts_per_model = [], [], [], []
+	m1counts_per_model, obs_m1counts_per_model = [], []  # got rid of m2counts_per_model and obs_m2counts_per_model
 
 	for lambdaa in lambdas:
 	
 		m2s = msamps
-		model_m1counts_per_m2 = pop_model(np.full(N_SAMP,m),m2s,lambdaa)
-		model_m1select_per_m2 = select_func(np.full(N_SAMP,m),m2s,np.full(N_SAMP,FIXED_DL),np.full(N_SAMP,FIXED_Z))
+		model_m1counts_per_m2 = pop_model(m2s,lambdaa)
+		model_m1select_per_m2 = select_func(m2s)
 		model_m1counts = np.sum(model_m1counts_per_m2)
 		model_m1obs = np.sum(model_m1counts_per_m2*model_m1select_per_m2)
 		
-		m1s = msamps
-		model_m2counts_per_m1 = pop_model(m1s,np.full(N_SAMP,m),lambdaa)
-		model_m2select_per_m1 = select_func(m1s,np.full(N_SAMP,m),np.full(N_SAMP,FIXED_DL),np.full(N_SAMP,FIXED_Z))
-		model_m2counts = np.sum(model_m2counts_per_m1)
-		model_m2obs = np.sum(model_m2counts_per_m1*model_m2select_per_m1)
+		# m1s = msamps
+		# model_m2counts_per_m1 = pop_model(m1s,np.full(N_SAMP,m),lambdaa)
+		# model_m2select_per_m1 = select_func(m1s,np.full(N_SAMP,m),np.full(N_SAMP,FIXED_DL),np.full(N_SAMP,FIXED_Z))
+		# model_m2counts = np.sum(model_m2counts_per_m1)
+		# model_m2obs = np.sum(model_m2counts_per_m1*model_m2select_per_m1)
 		
 		m1counts_per_model += [model_m1counts]
-		m2counts_per_model += [model_m2counts]
+		# m2counts_per_model += [model_m2counts]
 		obs_m1counts_per_model += [model_m1obs]
-		obs_m2counts_per_model += [model_m2obs]
+		# obs_m2counts_per_model += [model_m2obs]
 		
 	avg_m1counts = np.sum(m1counts_per_model)/num_post_samps
-	avg_m2counts = np.sum(m2counts_per_model)/num_post_samps
+	# avg_m2counts = np.sum(m2counts_per_model)/num_post_samps
 	avg_obs_m1counts = np.sum(obs_m1counts_per_model)/num_post_samps
-	avg_obs_m2counts = np.sum(obs_m2counts_per_model)/num_post_samps
+	# avg_obs_m2counts = np.sum(obs_m2counts_per_model)/num_post_samps
 	
 	med_m1counts = np.median(m1counts_per_model)
-	med_m2counts = np.median(m2counts_per_model)
+	# med_m2counts = np.median(m2counts_per_model)
 	med_obs_m1counts = np.median(obs_m1counts_per_model)
-	med_obs_m2counts = np.median(obs_m2counts_per_model)
+	# med_obs_m2counts = np.median(obs_m2counts_per_model)
 	
 	lb_m1counts = np.quantile(m1counts_per_model,(1.-CL)/2.)
-	lb_m2counts = np.quantile(m2counts_per_model,(1.-CL)/2.)
+	# lb_m2counts = np.quantile(m2counts_per_model,(1.-CL)/2.)
 	lb_obs_m1counts = np.quantile(obs_m1counts_per_model,(1.-CL)/2.)
-	lb_obs_m2counts = np.quantile(obs_m2counts_per_model,(1.-CL)/2.)
+	# lb_obs_m2counts = np.quantile(obs_m2counts_per_model,(1.-CL)/2.)
 	
 	ub_m1counts = np.quantile(m1counts_per_model,CL+(1.-CL)/2.)
-	ub_m2counts = np.quantile(m2counts_per_model,CL+(1.-CL)/2.)
+	# ub_m2counts = np.quantile(m2counts_per_model,CL+(1.-CL)/2.)
 	ub_obs_m1counts = np.quantile(obs_m1counts_per_model,CL+(1.-CL)/2.)
-	ub_obs_m2counts = np.quantile(obs_m2counts_per_model,CL+(1.-CL)/2.)
+	# ub_obs_m2counts = np.quantile(obs_m2counts_per_model,CL+(1.-CL)/2.)
 	
 	padm1 += [avg_m1counts]
-	padm2 += [avg_m2counts]
+	# padm2 += [avg_m2counts]
 	ppdm1 += [avg_obs_m1counts]
-	ppdm2 += [avg_obs_m2counts]
+	# ppdm2 += [avg_obs_m2counts]
 	
 	padm1_med += [med_m1counts]
-	padm2_med += [med_m2counts]
+	# padm2_med += [med_m2counts]
 	ppdm1_med += [med_obs_m1counts]
-	ppdm2_med += [med_obs_m2counts]
+	# ppdm2_med += [med_obs_m2counts]
 	
 	padm1_lb += [lb_m1counts]
-	padm2_lb += [lb_m2counts]
+	# padm2_lb += [lb_m2counts]
 	ppdm1_lb += [lb_obs_m1counts]
-	ppdm2_lb += [lb_obs_m2counts]
+	# ppdm2_lb += [lb_obs_m2counts]
 	
 	padm1_ub += [ub_m1counts]
-	padm2_ub += [ub_m2counts]
+	# padm2_ub += [ub_m2counts]
 	ppdm1_ub += [ub_obs_m1counts]
-	ppdm2_ub += [ub_obs_m2counts]
+	# ppdm2_ub += [ub_obs_m2counts]
 
 norm_padm1 = np.trapz(padm1,mgrid)
-norm_padm2 = np.trapz(padm2,mgrid)
+# norm_padm2 = np.trapz(padm2,mgrid)
 norm_ppdm1 = np.trapz(ppdm1,mgrid)
-norm_ppdm2 = np.trapz(ppdm2,mgrid)
+# norm_ppdm2 = np.trapz(ppdm2,mgrid)
 
 padm1 = np.array(padm1)/norm_padm1
-padm2 = np.array(padm2)/norm_padm2
+# padm2 = np.array(padm2)/norm_padm2
 ppdm1 = np.array(ppdm1)/norm_ppdm1
-ppdm2 = np.array(ppdm2)/norm_ppdm2
+# ppdm2 = np.array(ppdm2)/norm_ppdm2
 
 #med_norm_padm1 = np.trapz(padm1_med,mgrid)
 #med_norm_padm2 = np.trapz(padm2_med,mgrid)
@@ -166,36 +166,36 @@ ppdm2 = np.array(ppdm2)/norm_ppdm2
 #med_norm_ppdm2 = np.trapz(ppdm2_med,mgrid)
 
 padm1_med = np.array(padm1_med)/norm_padm1
-padm2_med = np.array(padm2_med)/norm_padm2
+# padm2_med = np.array(padm2_med)/norm_padm2
 ppdm1_med = np.array(ppdm1_med)/norm_ppdm1
-ppdm2_med = np.array(ppdm2_med)/norm_ppdm2
+# ppdm2_med = np.array(ppdm2_med)/norm_ppdm2
 
 padm1_lb = np.array(padm1_lb)/norm_padm1
-padm2_lb = np.array(padm2_lb)/norm_padm2
+# padm2_lb = np.array(padm2_lb)/norm_padm2
 ppdm1_lb = np.array(ppdm1_lb)/norm_ppdm1
-ppdm2_lb = np.array(ppdm2_lb)/norm_ppdm2
+# ppdm2_lb = np.array(ppdm2_lb)/norm_ppdm2
 
 padm1_ub = np.array(padm1_ub)/norm_padm1
-padm2_ub = np.array(padm2_ub)/norm_padm2
+# padm2_ub = np.array(padm2_ub)/norm_padm2
 ppdm1_ub = np.array(ppdm1_ub)/norm_ppdm1
-ppdm2_ub = np.array(ppdm2_ub)/norm_ppdm2
+# ppdm2_ub = np.array(ppdm2_ub)/norm_ppdm2
 	
-pad = 0.5*padm1+0.5*padm2
-ppd = 0.5*ppdm1+0.5*ppdm2
+pad = padm1 # +0.5*padm2 # I think I'm supposed to chance this as well
+ppd = ppdm1 # +0.5*ppdm2
 
-pad_med = 0.5*padm1_med+0.5*padm2_med
-ppd_med = 0.5*ppdm1_med+0.5*ppdm2_med
+pad_med = padm1_med # +0.5*padm2_med
+ppd_med = ppdm1_med #+0.5*ppdm2_med
 
-pad_lb = 0.5*padm1_lb+0.5*padm2_lb
-ppd_lb = 0.5*ppdm1_lb+0.5*ppdm2_lb
+pad_lb = padm1_lb # +0.5*padm2_lb
+ppd_lb = ppdm1_lb # +0.5*ppdm2_lb
 
-pad_ub = 0.5*padm1_ub+0.5*padm2_ub
-ppd_ub = 0.5*ppdm1_ub+0.5*ppdm2_ub
+pad_ub = padm1_ub # +0.5*padm2_ub
+ppd_ub = ppdm1_ub # +0.5*ppdm2_ub
 
 # save ppds
 
-data_out = np.column_stack((mgrid, pad, pad_med, pad_lb, pad_ub, ppd, ppd_med, ppd_lb, ppd_ub, padm1, padm1_med, padm1_lb, padm1_ub, ppdm1, ppdm1_med, ppdm1_lb, ppdm1_ub, padm2, padm2_med, padm2_lb, padm2_ub, ppdm2, ppdm2_med, ppdm2_lb, ppdm2_ub))
-header_out = 'm,mean,med,lb,ub,obs_mean,obs_med,obs_lb,obs_ub,m1mean,m1med,m1lb,m1ub,obs_m1mean,obs_m1med,obs_m1lb,obs_m1ub,m2mean,m2med,m2lb,m2ub,obs_m2mean,obs_m2med,obs_m2lb,obs_m2ub'
+data_out = np.column_stack((mgrid, pad, pad_med, pad_lb, pad_ub, ppd, ppd_med, ppd_lb, ppd_ub, padm1, padm1_med, padm1_lb, padm1_ub, ppdm1, ppdm1_med, ppdm1_lb, ppdm1_ub)) # padm2, padm2_med, padm2_lb, padm2_ub, ppdm2, ppdm2_med, ppdm2_lb, ppdm2_ub))
+header_out = 'm,mean,med,lb,ub,obs_mean,obs_med,obs_lb,obs_ub,m1mean,m1med,m1lb,m1ub,obs_m1mean,obs_m1med,obs_m1lb,obs_m1ub' # m2mean,m2med,m2lb,m2ub,obs_m2mean,obs_m2med,obs_m2lb,obs_m2ub'
 
 np.savetxt(out_path,data_out,header=header_out,comments='',delimiter=',')
 
