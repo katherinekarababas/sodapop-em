@@ -94,8 +94,8 @@ for m in mgrid:
 	for lambdaa in lambdas:
 	
 		m2s = msamps
-		model_m1counts_per_m2 = pop_model(N_SAMP,m,m2s,lambdaa)
-		model_m1select_per_m2 = select_func(N_SAMP,m,m2s,N_SAMP,FIXED_DL,N_SAMP,FIXED_Z)
+		model_m1counts_per_m2 = pop_model(m2s,lambdaa)
+		model_m1select_per_m2 = select_func(m2s)
 		model_m1counts = np.sum(model_m1counts_per_m2)
 		model_m1obs = np.sum(model_m1counts_per_m2*model_m1select_per_m2)
 		
