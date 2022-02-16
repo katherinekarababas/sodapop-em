@@ -49,7 +49,7 @@ def ppd_plot(ppds,outpath,med=False,logscale=True):
 	
 	fig = plt.figure(figsize=(8.,6.))
 	gs = gridspec.GridSpec(1, 1)
-	axs = [plt.subplot(gs[i]) for i in range(3)]
+	axs = [plt.subplot(gs[i]) for i in range(1)]
 	plt.subplots_adjust(hspace=0.05)
 	
 	if med: cent = [2,6]
