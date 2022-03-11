@@ -54,6 +54,10 @@ def loglikelihood(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_mod
 	
 	for i,likedata in enumerate(obs_data_psr):
 		
+		obs_class = obs_classes[i]
+		pop_model = pop_models[obs_class]
+		lambda_subset = lambdas[obs_class]
+		
 		psr_m = likedata
 		like_num = np.sum(pop_model(psr_m,psr_lambda))
 			
