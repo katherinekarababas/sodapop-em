@@ -1,10 +1,10 @@
 #!/bin/bash
 
 LIKEPATH="./sodapop/etc"
-LIKES="GW170817_reweighted.csv,GW190425_reweighted.csv,GW190426_reweighted.csv,GW200105_reweighted.csv,GW200115_reweighted.csv;GW170817_reweighted.csv,GW190425_reweighted.csv,GW190426_reweighted.csv,GW200105_reweighted.csv,GW200115_reweighted.csv,GW190917_reweighted.csv;GW170817_reweighted.csv,GW190425_reweighted.csv,GW190426_reweighted.csv,GW200105_reweighted.csv,GW200115_reweighted.csv,GW190917_reweighted.csv,GW190814_reweighted.csv"
-CLASSES="bns,bns,nsbh,nsbh,nsbh;bns,bns,nsbh,nsbh,nsbh,nsbh;bns,bns,nsbh,nsbh,nsbh,nsbh,nsbh"
-LIKESETS="A,B,C,D"
-MINMMAXS="1.7,1.7,2.5"
+LIKES='4U1700-377,Cyg_X-2,SMC_X-1,Cen_X-3,XTE_J2123-058,4U_1822-37,OAO_1657-415,J013236.7+303228,Vela_X-1,4U1538-522,LMC_X-4,Her_X-1,2S_0921-630,EXO_1722-363,SAXJ1802.7-2017,XTEJ1855-026,J0453+1559,J0453+1559_comp.,J1906+0746,J190+0746_comp.,B1534+12,B1534+12_comp.,B1913+16,B1913+16_comp.,B2127+11C,B2127+11C_comp.,J0737-3039A,J0737-3039B,J1756-2251,J1756-2251_comp.,J1807-2500B,J1807-2500B_comp.,J2045+3633,J2053+4650,J1713+0747,B1855+09,J0751+1807,J1141-6545,J1738+0333,J1614-2230,J0348+0432,J2222-0137,J2234+0611,J1949+3106,J1012+5307,J0437+4715,J1909-3744,J1802-2124,J1911-5958A,J2043+1711,J0337+1715,J1946+3417,J1918-0642,J1600-3053,J0045-7319,J1023+0038,J1903+0327,J0740+6602,J1913+1102,J0024-7204H,J0514-4002A,J0621+1002,B1516+02B,J1748-2021B,J1748-2446I,J1748-2446J,B1802-07,J1824-2452C,B2303+46,J1750-37A,B1957+20,J1311-3430,J1740-5350,J1816+4510,J1723-2837'
+CLASSES='psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr,psr'
+LIKESETS="A"
+MINMMAXS="1.7"
 NSBHBETA="0."
 
 POPMODELS="unif_m1m2,unif_m1m2_qpair,power_m1m2,power_m1m2_qpair,bimodcut_m1m2,bimodcut_m1m2_qpair"

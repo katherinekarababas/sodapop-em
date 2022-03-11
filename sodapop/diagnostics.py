@@ -48,12 +48,12 @@ def trace_plot(raw_samples,pop_param_names,fixed_params,outpath,num_burn=False):
 def ppd_plot(ppds,outpath,med=False,logscale=True):
 	
 	fig = plt.figure(figsize=(8.,6.))
-	gs = gridspec.GridSpec(3, 1)
-	axs = [plt.subplot(gs[i]) for i in range(3)]
+	gs = gridspec.GridSpec(1, 1)
+	axs = [plt.subplot(gs[i]) for i in range(1)]
 	plt.subplots_adjust(hspace=0.05)
 	
-	if med: cent = [2,6,10,14,18,22]
-	else: cent = [1,5,9,13,17,21]
+	if med: cent = [2,6]
+	else: cent = [1,5]
 	
 	axs[0].plot(ppds[:,0],ppds[:,cent[0]],c=sns.color_palette()[0],label='pop')
 	axs[0].fill_between(ppds[:,0],ppds[:,3],ppds[:,4],color=sns.color_palette()[0],alpha=0.1,lw=0.)
@@ -62,36 +62,12 @@ def ppd_plot(ppds,outpath,med=False,logscale=True):
 	axs[0].plot(ppds[:,0],ppds[:,7],c=sns.color_palette()[0],lw=0.5,ls='--')
 	axs[0].plot(ppds[:,0],ppds[:,8],c=sns.color_palette()[0],lw=0.5,ls='--')
 	
-	axs[1].plot(ppds[:,0],ppds[:,cent[2]],c=sns.color_palette()[0])
-	axs[1].fill_between(ppds[:,0],ppds[:,11],ppds[:,12],color=sns.color_palette()[0],alpha=0.1,lw=0.)
-	
-	axs[1].plot(ppds[:,0],ppds[:,cent[3]],c=sns.color_palette()[0],ls='--')
-	axs[1].plot(ppds[:,0],ppds[:,15],c=sns.color_palette()[0],lw=0.5,ls='--')
-	axs[1].plot(ppds[:,0],ppds[:,16],c=sns.color_palette()[0],lw=0.5,ls='--')
-	
-	axs[2].plot(ppds[:,0],ppds[:,cent[4]],c=sns.color_palette()[0])
-	axs[2].fill_between(ppds[:,0],ppds[:,19],ppds[:,20],color=sns.color_palette()[0],alpha=0.1,lw=0.)
-	
-	axs[2].plot(ppds[:,0],ppds[:,cent[5]],c=sns.color_palette()[0],ls='--')
-	axs[2].plot(ppds[:,0],ppds[:,23],c=sns.color_palette()[0],lw=0.5,ls='--')
-	axs[2].plot(ppds[:,0],ppds[:,24],c=sns.color_palette()[0],lw=0.5,ls='--')
-	
 	if logscale:
 		axs[0].set_yscale('log')
-		axs[1].set_yscale('log')
-		axs[2].set_yscale('log')
-
 		axs[0].set_ylim(0.1,5.)
-		axs[1].set_ylim(0.1,5.)
-		axs[2].set_ylim(0.1,5.)
 	
 	axs[0].set_ylabel('ppd(m)')
-	axs[1].set_ylabel('ppd(m1)')
-	axs[2].set_ylabel('ppd(m2)')
-	
-	axs[0].tick_params(labelbottom=False)
-	axs[1].tick_params(labelbottom=False)	
-	axs[2].set_xlabel('m')
+	axs[0].set_xlabel('m')
 	
 	axs[0].legend()
 	
