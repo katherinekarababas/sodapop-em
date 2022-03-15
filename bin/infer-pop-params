@@ -56,7 +56,7 @@ if args.verbose: print('walkers: {0}, burn in: {1}, target posterior samples: {2
 ### LOAD POPULATION MODEL AND PRIORS
 
 pop_models_list = [pop.get_pop_prior(popmod) for popmod in args.popmod]
-pop_models = {'bns': pop_models_list[0], 'nsbh': pop_models_list[1], 'psr': pop_models_list[2]} # get population models
+pop_models = {'bns': pop_models_list[0], 'nsbh': pop_models_list[1]} # get population models
 
 pop_param_names = (pop.get_pop_params(args.popmod[0])).split(',') # get population parameters from first-specified population model, check that they match what's in the prior samples later
 
@@ -82,44 +82,26 @@ likelihood_dict = {}
 ### LOAD LIKELIHOOD SAMPLES
 
 if args.verbose: print('Loading likelihood data...')
-	
-if args.clas == False or args.clas == 'False': obs_classes = ['bns' for likedata in args.likedata]
-else: obs_classes = [str(clas) for clas in args.clas]
 
-i_list = range(len(arg.likedata))
 likesamps = []
-for likedata,i in zip(args.likedata,i_list):
-	
-	if obs_classes[i] == 'bns' or obs_classes[i] == 'nsbh':
+for likedata in args.likedata:
 
-		data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
-		if args.verbose: print(likedata)
+	data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
+	if args.verbose: print(likedata)
 	
-		wts = data[args.col[-1]]
+	wts = data[args.col[-1]]
 
-		m1s = data[args.col[0]]
-		m2s = data[args.col[1]]
-		dls = data[args.col[2]]
-		zs = data[args.col[3]]
-		ids = np.random.choice(range(len(m1s)),N_LIKES,replace=True,p=wts/np.sum(wts))
-		samps = [np.array(m1s[ids]),np.array(m2s[ids]),np.array(dls[ids]),np.array(zs[ids])]
-		
-	elif obs_classes[i] == 'psr':
-		
-		data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
-		if args.verbose: print(likedata)
-
-		psr_m = data[args.col[0]] 
-		wts = np.ones(len(psr_m)) 
-	
-		ids = np.random.choice(range(len(psr_m)),N_LIKES,replace=True,p=wts/np.sum(wts)) 
-		samps = [np.array(psr_m[ids])]
-		
-	else:
-		print ('Class Error')
+	m1s = data[args.col[0]]
+	m2s = data[args.col[1]]
+	dls = data[args.col[2]]
+	zs = data[args.col[3]]
+	ids = np.random.choice(range(len(m1s)),N_LIKES,replace=True,p=wts/np.sum(wts))
+	samps = [np.array(m1s[ids]),np.array(m2s[ids]),np.array(dls[ids]),np.array(zs[ids])]
 	
 	likesamps.append(samps)
 
+if args.clas == False or args.clas == 'False': obs_classes = ['bns' for likedata in args.likedata]
+else: obs_classes = [str(clas) for clas in args.clas]
 
 ### INFER POPULATION
 
@@ -198,4 +180,3 @@ samples_out += [loglikes_out,logdetfracs_out,posts]
 post_samps = np.column_stack(samples_out)
 col_names = ','.join(pop_param_names)+',log_like,log_detfrac,weight'
 np.savetxt(out_path,post_samps[np.isfinite(post_samps).all(axis=1)],header=col_names,comments='',delimiter=',')
-
