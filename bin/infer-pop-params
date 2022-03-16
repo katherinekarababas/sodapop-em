@@ -21,10 +21,10 @@ import sodapop.diagnostics as dgn
 parser = ArgumentParser(description=__doc__)
 parser.add_argument('popparams')
 parser.add_argument('likedata', nargs='+')
-parser.add_argument('-C', '--clas', help='bns or nsbh classification of each event, DEFAULT="bns bns nsbh ..."', default=False, nargs='+')
-parser.add_argument('-c', '--col', help='name of mass1, mass2, distance and likelihood data columns to use, DEFAULT="m1 m2 dL z likelihood"', default=['m1','m2','dL','z','likelihood'], nargs='+')
+parser.add_argument('-C', '--clas', help='bns, nsbh or psr classification of each event, DEFAULT="bns bns ..."', default=False, nargs='+')
+parser.add_argument('-c', '--col', help='name of mass1, mass2, distance, psr_mass and likelihood data columns to use, DEFAULT="m1 m2 dL z m likelihood"', default=['m1','m2','dL','z','m','likelihood'], nargs='+')
 parser.add_argument('-l', '--nlike', help='number of likelihood samples to use, DEFAULT=1e3', default=1e3)
-parser.add_argument('-p', '--popmod', help='name of BNS and NSBH population models, DEFAULT="unif_m1m2 unif_m1_unif_m2_qpair"', default=["unif_m1m2","unif_m1_unif_m2_qpair"], nargs=2)
+parser.add_argument('-p', '--popmod', help='name of BNS, NSBH and PSR population models, DEFAULT="unif_m1m2 unif_m1_unif_m2_qpair unif_mass"', default=["unif_m1m2","unif_m1_unif_m2_qpair","unif_mass"], nargs=3)
 parser.add_argument('-P', '--priors', help='prior distribution and hyperparameters for each population parameter, DEFAULT="mmin,mmax+flat12,1.,1.5,1.5,3."', default="mmin,mmax+flat12,1.,1.5,1.5,3.", nargs='+')
 parser.add_argument('-F', '--fixed', help='fixed population parameter values (e.g. mmin,1.0), DEFAULT=False', default=False, nargs='+')
 parser.add_argument('-D', '--distprior', help='prior distribution for the distance, DEFAULT="quad,0.,1000."', default="quad,0.,1000.")
@@ -86,7 +86,7 @@ if args.verbose: print('Loading likelihood data...')
 if args.clas == False or args.clas == 'False': obs_classes = ['bns' for likedata in args.likedata]
 else: obs_classes = [str(clas) for clas in args.clas]
 
-i_list = range(len(arg.likedata))
+i_list = range(len(args.likedata))
 likesamps = []
 for likedata,i in zip(args.likedata,i_list):
 	
@@ -109,7 +109,7 @@ for likedata,i in zip(args.likedata,i_list):
 		data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
 		if args.verbose: print(likedata)
 
-		psr_m = data[args.col[0]] 
+		psr_m = data[args.col[4]] 
 		wts = np.ones(len(psr_m)) 
 	
 		ids = np.random.choice(range(len(psr_m)),N_LIKES,replace=True,p=wts/np.sum(wts)) 

@@ -24,15 +24,17 @@ def loglikelihood(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_mod
 	if 'beta' in lambda_dict.keys(): nsbh_lambda = bns_lambda[:-1]+lambdabh
 	else: nsbh_lambda = bns_lambda+lambdabh
 	
-	psr_lambda = [lambda_dict[param](lambdaa) for param in lambda_dict.keys()]
+	psr_lambda = [lambda_dict[param](lambdaa) for param in lambda_dict.keys() if param != 'beta']
 	
 	lambdas = {'bns': bns_lambda, 'nsbh': nsbh_lambda, 'psr': psr_lambda}
 	
 	log_like = 0.
 	obs_data_gw = [likedata for i,likedata in enumerate(obs_data) if obs_classes[i] == 'bns' or obs_classes[i] == 'nsbh']
 	obs_data_psr = [likedata for i,likedata in enumerate(obs_data) if obs_classes[i] == 'psr']
+	idxs_gw = [i for i,likedata in enumerate(obs_data) if obs_classes[i] == 'bns' or obs_classes[i] == 'nsbh']
+	idxs_psr = [i for i,likedata in enumerate(obs_data) if obs_classes[i] == 'psr']
 	
-	for i,likedata in enumerate(obs_data_gw):
+	for i,likedata in zip(idxs_gw,obs_data_gw):
 	
 		obs_class = obs_classes[i]
 		pop_model = pop_models[obs_class]
@@ -59,20 +61,20 @@ def loglikelihood(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_mod
 	
 		if not np.isfinite(log_like): return -np.inf, np.log(like_denom)
 	
-	for i,likedata in enumerate(obs_data_psr):
+	for i,likedata in zip(idxs_psr,obs_data_psr):
 		
 		obs_class = obs_classes[i]
 		pop_model = pop_models[obs_class]
 		lambda_subset = lambdas[obs_class]
 		
 		psr_m = likedata
-		like_num = np.sum(pop_model(psr_m,psr_lambda))
+		like_num = np.sum(pop_model(psr_m,lambda_subset))
 			
 		log_like += np.log(like_num)
 		
 		if not np.isfinite(log_like): return -np.inf, -np.inf
 	
-	return log_like, 0.
+	return log_like, np.log(like_denom)
 	
 def logposterior(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_models, sel_samps, sel_func, prior_dict, dist_func, dist_params, detfrac_dict, likelihood_dict): # log of posterior probability of population parameters lambda
 
