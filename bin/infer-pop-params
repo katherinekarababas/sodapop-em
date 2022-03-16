@@ -83,15 +83,19 @@ likelihood_dict = {}
 
 if args.verbose: print('Loading likelihood data...')
 
+if args.clas == False or args.clas == 'False': obs_classes = ['bns' for likedata in args.likedata]
+else: obs_classes = [str(clas) for clas in args.clas]
+
+i_list = range(len(args.likedata))
 likesamps = []
-for likedata in args.likedata:
+for likedata,i in zip(args.likedata,i_list):
 
-	data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
-	if args.verbose: print(likedata)
+	if obs_classes[i] == 'bns' or obs_classes[i] == 'nsbh':
+		
+		data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
+		if args.verbose: print(likedata)
 	
-<<<<<<< HEAD
 		wts = data[args.col[-1]]
-
 		m1s = data[args.col[0]]
 		m2s = data[args.col[1]]
 		dls = data[args.col[2]]
