@@ -42,6 +42,8 @@ def loglikelihood(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_mod
 		pop_model = pop_models[obs_class]
 		lambda_subset = lambdas[obs_class]
 		
+		print (lambda_subset)
+		
 		m1s,m2s,dls,zs = likedata
 		like_num = np.sum(pop_model(m1s,m2s,lambda_subset) * dist_func(dls,*dist_params))
 			
