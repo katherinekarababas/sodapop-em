@@ -20,6 +20,8 @@ def loglikelihood(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_mod
 
 	num_obs = len(obs_data)
 	
+	like_denom = 1.
+	
 	bns_lambda = [lambda_dict[param](lambdaa) for param in lambda_dict.keys()]
 	if 'beta' in lambda_dict.keys(): nsbh_lambda = bns_lambda[:-1]+lambdabh
 	else: nsbh_lambda = bns_lambda+lambdabh
