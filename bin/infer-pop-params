@@ -85,11 +85,16 @@ likelihood_dict = {}
 
 if args.verbose: print('Loading likelihood data...')
 
+if args.clas == False or args.clas == 'False': obs_classes = ['bns' for likedata in args.likedata]
+else: obs_classes = [str(clas) for clas in args.clas]
+
 likesamps = []
-for likedata in args.likedata:
+for i,likedata in enumerate(args.likedata):
 
 	data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
 	if args.verbose: print(likedata)
+	
+	if obs_classes[i] == 'bns' or obs_classes[i] == 'nsbh':
 	
 		wts = data[args.col[-1]]
 		m1s = data[args.col[0]]
@@ -114,9 +119,6 @@ for likedata in args.likedata:
 		print ('Class Error')
 	
 	likesamps.append(samps)
-
-if args.clas == False or args.clas == 'False': obs_classes = ['bns' for likedata in args.likedata]
-else: obs_classes = [str(clas) for clas in args.clas]
 
 ### INFER POPULATION
 

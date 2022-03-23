@@ -85,7 +85,7 @@ def quad(size=1,lb=0.,ub=1.):
 
 ### EOS-INFORMED MMAX DISTRIBUTION
 
-mmax_dat = np.genfromtxt(MMAX_PATH,names=True,dtype=None,encoding=None,delimiter=',')
+#mmax_dat = np.genfromtxt(MMAX_PATH,names=True,dtype=None,encoding=None,delimiter=',')
 	
 #def mmax_prior(x,mtovs=mtovs,min_mmax=1.5,max_mtov=5.):
 
