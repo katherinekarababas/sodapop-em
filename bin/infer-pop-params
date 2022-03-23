@@ -24,7 +24,7 @@ parser.add_argument('likedata', nargs='+')
 parser.add_argument('-C', '--clas', help='bns or nsbh classification of each event, DEFAULT="bns bns nsbh ..."', default=False, nargs='+')
 parser.add_argument('-c', '--col', help='name of mass1, mass2, distance and likelihood data columns to use, DEFAULT="m1 m2 dL z likelihood"', default=['m1','m2','dL','z','likelihood'], nargs='+')
 parser.add_argument('-l', '--nlike', help='number of likelihood samples to use, DEFAULT=1e3', default=1e3)
-parser.add_argument('-p', '--popmod', help='name of BNS and NSBH population models, DEFAULT="unif_m1m2 unif_m1_unif_m2_qpair"', default=["unif_m1m2","unif_m1_unif_m2_qpair"], nargs=2)
+parser.add_argument('-p', '--popmod', help='name of BNS, NSBH and PSR population models, DEFAULT="unif_m1m2 unif_m1_unif_m2_qpair unif_mass"', default=["unif_m1m2","unif_m1_unif_m2_qpair","unif_mass"], nargs='+')
 parser.add_argument('-P', '--priors', help='prior distribution and hyperparameters for each population parameter, DEFAULT="mmin,mmax+flat12,1.,1.5,1.5,3."', default="mmin,mmax+flat12,1.,1.5,1.5,3.", nargs='+')
 parser.add_argument('-F', '--fixed', help='fixed population parameter values (e.g. mmin,1.0), DEFAULT=False', default=False, nargs='+')
 parser.add_argument('-D', '--distprior', help='prior distribution for the distance, DEFAULT="quad,0.,1000."', default="quad,0.,1000.")
@@ -56,7 +56,9 @@ if args.verbose: print('walkers: {0}, burn in: {1}, target posterior samples: {2
 ### LOAD POPULATION MODEL AND PRIORS
 
 pop_models_list = [pop.get_pop_prior(popmod) for popmod in args.popmod]
-pop_models = {'bns': pop_models_list[0], 'nsbh': pop_models_list[1]} # get population models
+if len(pop_models_list) < 3: pop_models = {'bns': pop_models_list[0], 'nsbh': pop_models_list[1]}
+elif len(pop_models_list) == 3: pop_models = {'bns': pop_models_list[0], 'nsbh': pop_models_list[1], 'psr': pop_models_list[2]}
+else: pop_models = {'bns': pop_models_list[0], 'nsbh': pop_models_list[1], 'psr': pop_models_list[2], 'dns': pop_models_list[3]} # get population models
 
 pop_param_names = (pop.get_pop_params(args.popmod[0])).split(',') # get population parameters from first-specified population model, check that they match what's in the prior samples later
 
@@ -89,14 +91,27 @@ for likedata in args.likedata:
 	data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
 	if args.verbose: print(likedata)
 	
-	wts = data[args.col[-1]]
+		wts = data[args.col[-1]]
+		m1s = data[args.col[0]]
+		m2s = data[args.col[1]]
+		dls = data[args.col[2]]
+		zs = data[args.col[3]]
+		ids = np.random.choice(range(len(m1s)),N_LIKES,replace=True,p=wts/np.sum(wts))
+		samps = [np.array(m1s[ids]),np.array(m2s[ids]),np.array(dls[ids]),np.array(zs[ids])]
+		
+	elif obs_classes[i] == 'psr' or obs_classes[i] == 'dns':
+		
+		data = np.genfromtxt(likedata,names=True,dtype=None,delimiter=args.delim)
+		if args.verbose: print(likedata)
 
-	m1s = data[args.col[0]]
-	m2s = data[args.col[1]]
-	dls = data[args.col[2]]
-	zs = data[args.col[3]]
-	ids = np.random.choice(range(len(m1s)),N_LIKES,replace=True,p=wts/np.sum(wts))
-	samps = [np.array(m1s[ids]),np.array(m2s[ids]),np.array(dls[ids]),np.array(zs[ids])]
+		psr_m = data[args.col[4]] 
+		wts = np.ones(len(psr_m)) 
+	
+		ids = np.random.choice(range(len(psr_m)),N_LIKES,replace=True,p=wts/np.sum(wts)) 
+		samps = [np.array(psr_m[ids])]
+		
+	else:
+		print ('Class Error')
 	
 	likesamps.append(samps)
 
@@ -109,8 +124,7 @@ pop_params = np.genfromtxt(args.popparams, names=True, dtype=None, delimiter=arg
 param_names = list(pop_params.dtype.names)
 num_prior_samps = len(pop_params[param_names[0]])
 assert(set(param_names) == set(pop_param_names)) # make sure population model used for prior samples agrees with one being inferred
-for param in param_names:
-	if param in fixed_params: param_names.remove(param) # don't infer fixed parameters
+param_names = [param for param in param_names if param not in fixed_params]
 
 if args.batch: ini_idxs = range(int(args.batch),N_WALKERS+int(args.batch)) # initialize emcee walkers
 else: ini_idxs = np.random.choice(range(num_prior_samps),N_WALKERS,replace=False)

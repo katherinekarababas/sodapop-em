@@ -19,11 +19,24 @@ def logprior(lambdaa, lambda_dict, prior_dict): # log of prior probability of po
 def loglikelihood(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_models, sel_samps, sel_func, dist_func, dist_params, detfrac_dict, likelihood_dict): # log of likelihood of population parameters lambda
 
 	num_obs = len(obs_data)
-
-	psr_lambda = [lambda_dict[param](lambdaa) for param in lambda_dict.keys()]
+	
+	like_denom = 1.
+	
+	bns_lambda = [lambda_dict[param](lambdaa) for param in lambda_dict.keys()]
+	if 'beta' in lambda_dict.keys(): nsbh_lambda = bns_lambda[:-1]+lambdabh
+	else: nsbh_lambda = bns_lambda+lambdabh
+	
+	psr_lambda = [lambda_dict[param](lambdaa) for param in lambda_dict.keys() if param != 'beta']
+	
+	lambdas = {'bns': bns_lambda, 'nsbh': nsbh_lambda, 'psr': psr_lambda, 'dns': psr_lambda}
 	
 	log_like = 0.
-	for i,likedata in enumerate(obs_data):
+	obs_data_gw = [likedata for i,likedata in enumerate(obs_data) if obs_classes[i] == 'bns' or obs_classes[i] == 'nsbh']
+	obs_data_psr = [likedata for i,likedata in enumerate(obs_data) if obs_classes[i] == 'psr' or obs_classes[i] == 'dns']
+	idxs_gw = [i for i,likedata in enumerate(obs_data) if obs_classes[i] == 'bns' or obs_classes[i] == 'nsbh']
+	idxs_psr = [i for i,likedata in enumerate(obs_data) if obs_classes[i] == 'psr' or obs_classes[i] == 'dns']
+	
+	for i,likedata in zip(idxs_gw,obs_data_gw):
 	
 		obs_class = obs_classes[i]
 		pop_model = pop_models[obs_class]

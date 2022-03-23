@@ -97,6 +97,34 @@ def bimodcut_mass(m,lambdaa): # double gaussian mass distribution with high- and
 	p = w*gaussian(m,(mu1,sigma1))/norm1 + (1.-w)*gaussian(m,(mu2,sigma2))/norm2
 	
 	return np.where((m > mmax) | (m < mmin), z, p)
+	
+def bimodcutgw_mass(m,lambdaa): # double gaussian mass distribution with high- and low-mass cutoffs
+
+	mu1, sigma1, mu2, sigma2, w, mmin, mmax, xgw, xpsr = lambdaa[:9]
+	
+	if np.isscalar(m): m = np.array([m])
+	else: m = np.array(m)
+	z = np.zeros(len(m))
+	
+	norm1 = 0.5*(scipy.special.erf((mmax-mu1)/(np.sqrt(2)*sigma1))-scipy.special.erf((mmin-mu1)/(np.sqrt(2)*sigma1)))
+	norm2 = 0.5*(scipy.special.erf((mmax-mu2)/(np.sqrt(2)*sigma2))-scipy.special.erf((mmin-mu2)/(np.sqrt(2)*sigma2)))
+	p = ((xgw-1.)*w+1.)**(-1)*xgw*w*gaussian(m,(mu1,sigma1))/norm1 + ((xgw-1.)*w+1.)**(-1)*(1.-w)*gaussian(m,(mu2,sigma2))/norm2
+	
+	return np.where((m > mmax) | (m < mmin), z, p)
+	
+def bimodcutpsr_mass(m,lambdaa): # double gaussian mass distribution with high- and low-mass cutoffs
+
+	mu1, sigma1, mu2, sigma2, w, mmin, mmax, xgw, xpsr = lambdaa[:9]
+	
+	if np.isscalar(m): m = np.array([m])
+	else: m = np.array(m)
+	z = np.zeros(len(m))
+	
+	norm1 = 0.5*(scipy.special.erf((mmax-mu1)/(np.sqrt(2)*sigma1))-scipy.special.erf((mmin-mu1)/(np.sqrt(2)*sigma1)))
+	norm2 = 0.5*(scipy.special.erf((mmax-mu2)/(np.sqrt(2)*sigma2))-scipy.special.erf((mmin-mu2)/(np.sqrt(2)*sigma2)))
+	p = ((xpsr-1.)*w+1.)**(-1)*xpsr*w*gaussian(m,(mu1,sigma1))/norm1 + ((xpsr-1.)*w+1.)**(-1)*(1.-w)*gaussian(m,(mu2,sigma2))/norm2
+	
+	return np.where((m > mmax) | (m < mmin), z, p)
 
 def unif_m1m2(m1,m2,lambdaa): # uniform distribution in masses, subject to m1 >= m2 convention
 
@@ -251,6 +279,30 @@ def bimodcut_m1_unif_m2_qpair(m1,m2,lambdaa): # bimodal in m1, uniform in m2, su
     
 	return np.where(m1 < m2, z, p)
 
+def bimodcutgw_m1m2(m1,m2,lambdaa): # double gaussian distribution in masses with high- and low-mass cutoffs, subject to m1 >= m2 convention
+
+	if np.isscalar(m1): m1 = np.array([m1])
+	else: m1 = np.array(m1)
+	if np.isscalar(m2): m2 = np.array([m2])
+	else: m2 = np.array(m2)
+	z = np.zeros(len(m1))
+	
+	p = bimodcutgw_mass(m1,lambdaa)*bimodcutgw_mass(m2,lambdaa)
+	
+	return np.where(m1 < m2, z, p)
+	
+def bimodcutpsr_m1m2(m1,m2,lambdaa): # double gaussian distribution in masses with high- and low-mass cutoffs, subject to m1 >= m2 convention
+
+	if np.isscalar(m1): m1 = np.array([m1])
+	else: m1 = np.array(m1)
+	if np.isscalar(m2): m2 = np.array([m2])
+	else: m2 = np.array(m2)
+	z = np.zeros(len(m1))
+	
+	p = bimodcutpsr_mass(m1,lambdaa)*bimodcutpsr_mass(m2,lambdaa)
+	
+	return np.where(m1 < m2, z, p)
+	
 # NSBH MASS DISTRIBUTIONS
 
 def unif_m1_unif_m2(m1,m2,lambdaa): # uniform distributions in bh and ns masses, subject to m1 >= m2 convention
@@ -353,11 +405,37 @@ def unif_m1_bimodcut_m2_qpair(m1,m2,lambdaa): # uniform distribution in bh masse
 	
 	return p
 
+def power2_m1_unif_m2_qpair(m1,m2,lambdaa): # power-law in m1 with exponent -2, uniform in m2, subject to m1 >= m2 convention and q-dependent pairing
+
+        beta = lambdaa[-1]
+
+        if np.isscalar(m1): m1 = np.array([m1])
+        else: m1 = np.array(m1)
+        if np.isscalar(m2): m2 = np.array([m2])
+        else: m2 = np.array(m2)
+        z = np.zeros(len(m1))
+
+        p = power_mass(m1,[-2.]+lambdaa[2:])*unif_mass(m2,lambdaa)*(m2/m1)**beta
+
+        return np.where(m1 < m2, z, p)
+        
+def unif_m1_bimodcutgw_m2(m1,m2,lambdaa): # uniform distribution in bh masses and double gaussian distribution in ns masses, subject to m1 >= m2 convention
+
+	if np.isscalar(m1): m1 = np.array([m1])
+	else: m1 = np.array(m1)
+	if np.isscalar(m2): m2 = np.array([m2])
+	else: m2 = np.array(m2)
+	z = np.zeros(len(m1))
+
+	p = unif_mass(m1,lambdaa[9:])*bimodcutgw_mass(m2,lambdaa)
+	
+	return np.where(m1 < m2, z, p)
+	
 # LOOKUP FUNCTIONS
 
-pop_priors = {'unif_mass': unif_mass, 'peak_mass': peak_mass, 'power_mass': power_mass, 'bimod_mass': bimod_mass, 'peakcut_mass': peakcut_mass, 'bimodcut_mass': bimodcut_mass, 'unif_m1m2': unif_m1m2, 'peak_m1m2': peak_m1m2, 'bimod_m1m2': bimod_m1m2, 'power_m1m2': power_m1m2, 'peakcut_m1m2': peakcut_m1m2, 'bimodcut_m1m2': bimodcut_m1m2, 'unif_m1m2_qpair': unif_m1m2_qpair, 'power_m1m2_qpair': power_m1m2_qpair, 'peakcut_m1m2_qpair': peakcut_m1m2_qpair, 'bimodcut_m1m2_qpair': bimodcut_m1m2_qpair, 'unif_m1_unif_m2': unif_m1_unif_m2, 'unif_m1_unif_m2_qpair': unif_m1_unif_m2_qpair, 'unif_m1_power_m2': unif_m1_power_m2, 'unif_m1_power_m2_qpair': unif_m1_power_m2_qpair, 'unif_m1_peakcut_m2': unif_m1_peakcut_m2, 'unif_m1_peakcut_m2_qpair': unif_m1_peakcut_m2_qpair, 'unif_m1_bimodcut_m2': unif_m1_bimodcut_m2, 'unif_m1_bimodcut_m2_qpair': unif_m1_bimodcut_m2_qpair, 'power_m1_unif_m2_qpair': power_m1_unif_m2_qpair, 'bimodcut_m1_unif_m2_qpair': bimodcut_m1_unif_m2_qpair}
+pop_priors = {'unif_mass': unif_mass, 'peak_mass': peak_mass, 'power_mass': power_mass, 'bimod_mass': bimod_mass, 'peakcut_mass': peakcut_mass, 'bimodcut_mass': bimodcut_mass, 'bimodcutgw_mass': bimodcutgw_mass, 'bimodcutpsr_mass': bimodcutpsr_mass, 'unif_m1m2': unif_m1m2, 'peak_m1m2': peak_m1m2, 'bimod_m1m2': bimod_m1m2, 'power_m1m2': power_m1m2, 'peakcut_m1m2': peakcut_m1m2, 'bimodcut_m1m2': bimodcut_m1m2, 'bimodcutgw_m1m2': bimodcutgw_m1m2, 'bimodcutpsr_m1m2': bimodcutpsr_m1m2, 'unif_m1m2_qpair': unif_m1m2_qpair, 'power_m1m2_qpair': power_m1m2_qpair, 'peakcut_m1m2_qpair': peakcut_m1m2_qpair, 'bimodcut_m1m2_qpair': bimodcut_m1m2_qpair, 'unif_m1_unif_m2': unif_m1_unif_m2, 'unif_m1_unif_m2_qpair': unif_m1_unif_m2_qpair, 'unif_m1_power_m2': unif_m1_power_m2, 'unif_m1_power_m2_qpair': unif_m1_power_m2_qpair, 'unif_m1_peakcut_m2': unif_m1_peakcut_m2, 'unif_m1_peakcut_m2_qpair': unif_m1_peakcut_m2_qpair, 'unif_m1_bimodcut_m2': unif_m1_bimodcut_m2, 'unif_m1_bimodcutgw_m2': unif_m1_bimodcut_m2, 'unif_m1_bimodcut_m2_qpair': unif_m1_bimodcut_m2_qpair, 'power_m1_unif_m2_qpair': power_m1_unif_m2_qpair, 'bimodcut_m1_unif_m2_qpair': bimodcut_m1_unif_m2_qpair,'power2_m1_unif_m2_qpair': power2_m1_unif_m2_qpair}
 
-pop_params = {'unif_mass': 'mmin,mmax', 'peak_mass': 'mu,sigma', 'power_mass':'alpha,mmin,mmax', 'bimod_mass': 'mu1,sigma1,mu2,sigma2,w', 'peakcut_mass': 'mu,sigma,mmin,mmax', 'bimodcut_mass': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax', 'unif_m1m2': 'mmin,mmax', 'peak_m1m2': 'mu,sigma', 'bimod_m1m2': 'mu1,sigma1,mu2,sigma2,w', 'power_m1m2': 'alpha,mmin,mmax', 'peakcut_m1m2': 'mu,sigma,mmin,mmax', 'bimodcut_m1m2': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax', 'unif_m1m2_qpair': 'mmin,mmax,beta', 'power_m1m2_qpair': 'alpha,mmin,mmax,beta', 'peakcut_m1m2_qpair': 'mu,sigma,mmin,mmax,beta', 'bimodcut_m1m2_qpair': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,beta', 'unif_m1_unif_m2': 'mmin,mmax', 'unif_m1_unif_m2_qpair': 'mmin,mmax,beta', 'unif_m1_power_m2': 'alpha,mmin,mmax', 'unif_m1_power_m2_qpair': 'alpha,mmin,mmax,beta', 'unif_m1_peakcut_m2': 'mu,sigma,mmin,mmax', 'unif_m1_peakcut_m2_qpair': 'mu,sigma,mmin,mmax,beta', 'unif_m1_bimodcut_m2': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax', 'unif_m1_bimodcut_m2_qpair': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,beta', 'power_m1_unif_m2_qpair': 'alpha,mmin,mmax,beta', 'bimodcut_m1_unif_m2_qpair': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,beta'}
+pop_params = {'unif_mass': 'mmin,mmax', 'peak_mass': 'mu,sigma', 'power_mass':'alpha,mmin,mmax', 'bimod_mass': 'mu1,sigma1,mu2,sigma2,w', 'peakcut_mass': 'mu,sigma,mmin,mmax', 'bimodcut_mass': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax', 'bimodcutgw_mass': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,xgw,xpsr', 'bimodcutpsr_mass': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,xgw,xpsr', 'unif_m1m2': 'mmin,mmax', 'peak_m1m2': 'mu,sigma', 'bimod_m1m2': 'mu1,sigma1,mu2,sigma2,w', 'power_m1m2': 'alpha,mmin,mmax', 'peakcut_m1m2': 'mu,sigma,mmin,mmax', 'bimodcut_m1m2': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax', 'bimodcutgw_m1m2': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,xgw,xpsr', 'bimodcutpsr_m1m2': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,xgw,xpsr', 'unif_m1m2_qpair': 'mmin,mmax,beta', 'power_m1m2_qpair': 'alpha,mmin,mmax,beta', 'peakcut_m1m2_qpair': 'mu,sigma,mmin,mmax,beta', 'bimodcut_m1m2_qpair': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,beta', 'unif_m1_unif_m2': 'mmin,mmax', 'unif_m1_unif_m2_qpair': 'mmin,mmax,beta', 'unif_m1_power_m2': 'alpha,mmin,mmax', 'unif_m1_power_m2_qpair': 'alpha,mmin,mmax,beta', 'unif_m1_peakcut_m2': 'mu,sigma,mmin,mmax', 'unif_m1_peakcut_m2_qpair': 'mu,sigma,mmin,mmax,beta', 'unif_m1_bimodcut_m2': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax', 'unif_m1_bimodcutgw_m2': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,xgw,xpsr', 'unif_m1_bimodcut_m2_qpair': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,beta', 'power_m1_unif_m2_qpair': 'alpha,mmin,mmax,beta', 'bimodcut_m1_unif_m2_qpair': 'mu1,sigma1,mu2,sigma2,w,mmin,mmax,beta', 'power2_m1_unif_m2_qpair': 'mmin,mmax,beta'}
 
 def get_pop_prior(key):
 

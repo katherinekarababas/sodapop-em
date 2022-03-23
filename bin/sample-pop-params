@@ -70,6 +70,8 @@ for key in prior_keys:
 	for i in range(num_names):
 		if key_names[i] == 'alpha' or key_names[i] == 'beta':
 			grid_list += [params.flat(GRID_PTS,-12.,12.)]
+		elif key_names[i] == 'xgw' or key_names[i] == 'xpsr':
+			grid_list += [params.flat(GRID_PTS,0.,500.)]
 		else:	
 			grid_list += [params.flat(GRID_PTS,0.,5.)]
 	
