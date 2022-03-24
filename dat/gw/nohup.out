@@ -1,0 +1,10 @@
+walkers: 36, burn in: 100, target posterior samples: 10000, likelihood samples: 100, selection effect samples: 5000
+Loading likelihood data...
+sodapop-em/etc/gw/GW170817_reweighted.csv
+sodapop-em/etc/gw/GW190425_reweighted.csv
+sodapop-em/etc/gw/GW200105_reweighted.csv
+sodapop-em/etc/gw/GW200115_reweighted.csv
+emcee ran for 336.7603831291199 seconds
+autocorrelation lengths for population parameters are [103.45679193 112.20396914  94.37133493 113.5727621 ]
+number of independent samples is 3204
+effective samples per second is 9

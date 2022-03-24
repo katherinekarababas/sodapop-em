@@ -1,0 +1,9 @@
+nohup: ignoring input
+/home/phil/Documents/Research/opt/lib/python3.8/site-packages/sodapop-0.0-py3.8.egg/sodapop/emcee.py:75: RuntimeWarning: divide by zero encountered in log
+/home/phil/Documents/Research/opt/lib/python3.8/site-packages/sodapop-0.0-py3.8.egg/sodapop/emcee.py:48: RuntimeWarning: divide by zero encountered in log
+/home/phil/Documents/Research/opt/lib/python3.8/site-packages/sodapop-0.0-py3.8.egg/sodapop/emcee.py:15: RuntimeWarning: divide by zero encountered in log
+/home/phil/.local/lib/python3.8/site-packages/emcee/moves/red_blue.py:99: RuntimeWarning: invalid value encountered in double_scalars
+  lnpdiff = f + nlp - state.log_prob[j]
+The chain is shorter than 50 times the integrated autocorrelation time for 3 parameter(s). Use this estimate with caution and run a longer chain!
+N/50 = 202;
+tau: [228.785074   412.91960004 108.89100505 207.62395402]

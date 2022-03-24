@@ -1,0 +1,5 @@
+sample-pop-params peakcut_mass -n 36 -p mmin,mmax,mu+flat123,1.,1.2,1.8,2.4,1.2,1.8 sigma+flat,0.01,2. -o sodapop-em/dat/prod/gw/peakcut_mass_prior.csv -v
+
+infer-pop-params sodapop-em/dat/prod/gw/peakcut_mass_prior.csv $(ls -m sodapop-em/etc/gw/*.csv | tr -d ',') -p peakcut_m1m2 unif_m1_peakcut_m2 peakcut_mass -C bns bns nsbh nsbh -c m1_source m2_source dL z m likelihood -l 100 -P mmin,mmax,mu+flat123,1.,1.5,1.5,3.,1.,3. sigma+flat,0.01,2. -B 3. 60. 0. -f chirpmass52 -s 5000 -t 10000 -w 36 -b 100 -o sodapop-em/dat/prod/gw/peakcut_mass.csv --diag -v
+
+build-ppd sodapop-em/dat/prod/gw/peakcut_mass.csv -p peakcut_m1m2 -s 5000 -f chirpmass52 -m 5000 -o sodapop-em/dat/prod/gw/peakcut_mass_ppd.csv -v

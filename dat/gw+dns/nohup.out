@@ -1,0 +1,27 @@
+walkers: 36, burn in: 100, target posterior samples: 10000, likelihood samples: 100, selection effect samples: 5000
+Loading likelihood data...
+sodapop-em/etc/gw/GW170817_reweighted.csv
+sodapop-em/etc/gw/GW190425_reweighted.csv
+sodapop-em/etc/gw/GW200105_reweighted.csv
+sodapop-em/etc/gw/GW200115_reweighted.csv
+sodapop-em/etc/dns/psr_B1534+12_comp.csv
+sodapop-em/etc/dns/psr_B1534+12.csv
+sodapop-em/etc/dns/psr_B1913+16_comp.csv
+sodapop-em/etc/dns/psr_B1913+16.csv
+sodapop-em/etc/dns/psr_B2127+11C_comp.csv
+sodapop-em/etc/dns/psr_B2127+11C.csv
+sodapop-em/etc/dns/psr_J0453+1559_comp.csv
+sodapop-em/etc/dns/psr_J0453+1559.csv
+sodapop-em/etc/dns/psr_J0737-3039A.csv
+sodapop-em/etc/dns/psr_J0737-3039B.csv
+sodapop-em/etc/dns/psr_J1756-2251_comp.csv
+sodapop-em/etc/dns/psr_J1756-2251.csv
+sodapop-em/etc/dns/psr_J1807-2500B_comp.csv
+sodapop-em/etc/dns/psr_J1807-2500B.csv
+sodapop-em/etc/dns/psr_J1906+0746_comp.csv
+sodapop-em/etc/dns/psr_J1906+0746.csv
+sodapop-em/etc/dns/psr_mt_J1913+1102.csv
+emcee ran for 620.9347774982452 seconds
+autocorrelation lengths for population parameters are [228.785074   412.91960004 108.89100505 207.62395402]
+number of independent samples is 900
+effective samples per second is 1

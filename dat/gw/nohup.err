@@ -1,0 +1,3 @@
+nohup: ignoring input
+/home/phil/Documents/Research/opt/lib/python3.8/site-packages/sodapop-0.0-py3.8.egg/sodapop/emcee.py:15: RuntimeWarning: divide by zero encountered in log
+/home/phil/Documents/Research/opt/lib/python3.8/site-packages/sodapop-0.0-py3.8.egg/sodapop/emcee.py:48: RuntimeWarning: divide by zero encountered in log
