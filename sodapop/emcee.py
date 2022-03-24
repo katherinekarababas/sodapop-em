@@ -40,27 +40,43 @@ def loglikelihood(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_mod
 	
 		obs_class = obs_classes[i]
 		pop_model = pop_models[obs_class]
+		lambda_subset = lambdas[obs_class]
 		
-		psr_m = likedata
-		like_num = np.sum(pop_model(psr_m,psr_lambda))
+		m1s,m2s,dls,zs = likedata
+		like_num = np.sum(pop_model(m1s,m2s,lambda_subset) * dist_func(dls,*dist_params))
 			
 		log_like += np.log(like_num)
 		
 		if not np.isfinite(log_like): return -np.inf, -np.inf
-
-	#m1s,m2s,dls,zs = sel_samps
-	#nsbh_pop_probs = pop_models['nsbh'](m1s,m2s,lambdas['nsbh'])
-	#bns_pop_probs = pop_models['bns'](m1s,m2s,lambdas['bns'])
 	
-	#pop_probs = np.where(m1s > lambdabh[0], nsbh_pop_probs, bns_pop_probs) # use NSBH model if sample in NSBH region
+	if not obs_data_gw == []:
+
+		m1s,m2s,dls,zs = sel_samps
+		nsbh_pop_probs = pop_models['nsbh'](m1s,m2s,lambdas['nsbh'])
+		bns_pop_probs = pop_models['bns'](m1s,m2s,lambdas['bns'])
+	
+		pop_probs = np.where(m1s > lambdabh[0], nsbh_pop_probs, bns_pop_probs) # use NSBH model if sample in NSBH region
 			
-	#like_denom = np.sum(sel_func(m1s,m2s,dls,zs) * pop_probs * dist_func(dls,*dist_params))
+		like_denom = np.sum(sel_func(m1s,m2s,dls,zs) * pop_probs * dist_func(dls,*dist_params))
 
-	#log_like -= num_obs*np.log(like_denom)
+		log_like -= num_obs*np.log(like_denom)
 	
-	#if not np.isfinite(log_like): return -np.inf, np.log(like_denom)
-
-	return log_like, 0.
+		if not np.isfinite(log_like): return -np.inf, np.log(like_denom)
+	
+	for i,likedata in zip(idxs_psr,obs_data_psr):
+		
+		obs_class = obs_classes[i]
+		pop_model = pop_models[obs_class]
+		lambda_subset = lambdas[obs_class]
+		
+		psr_m = likedata
+		like_num = np.sum(pop_model(psr_m,lambda_subset))
+			
+		log_like += np.log(like_num)
+		
+		if not np.isfinite(log_like): return -np.inf, -np.inf
+	
+	return log_like, np.log(like_denom)
 	
 def logposterior(lambdaa, lambda_dict, lambdabh, obs_data, obs_classes, pop_models, sel_samps, sel_func, prior_dict, dist_func, dist_params, detfrac_dict, likelihood_dict): # log of posterior probability of population parameters lambda
 

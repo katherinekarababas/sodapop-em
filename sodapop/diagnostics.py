@@ -62,11 +62,14 @@ def ppd_plot(ppds,outpath,med=False,logscale=True):
 	axs[0].plot(ppds[:,0],ppds[:,7],c=sns.color_palette()[0],lw=0.5,ls='--')
 	axs[0].plot(ppds[:,0],ppds[:,8],c=sns.color_palette()[0],lw=0.5,ls='--')
 	
+	
 	if logscale:
 		axs[0].set_yscale('log')
+
 		axs[0].set_ylim(0.1,5.)
 	
 	axs[0].set_ylabel('ppd(m)')
+		
 	axs[0].set_xlabel('m')
 	
 	axs[0].legend()

@@ -2,6 +2,7 @@
 
 import numpy as np
 import scipy.special
+#import scipy.integrate
 
 ### BASIC ANALYTIC DISTRIBUTIONS
 
@@ -41,6 +42,19 @@ def gaussian(m,lambdaa):
 	
 	return p
 
+def smooth(m,lambdaa):
+
+	mmin, delta = lambdaa[:2]
+	
+	if np.isscalar(m): m = np.array([m])
+	else: m = np.array(m)
+	z = np.zeros(len(m))
+	o = np.ones(len(m))
+	
+	p = 1./(np.exp(delta/(m-mmin)+delta/(m-mmin-delta))+1.)
+	
+	return np.select([m < mmin, (m >= mmin) & (m < mmin + delta), m >= mmin + delta], [z, p, o])
+
 ### INDIVIDUAL MASS DISTRIBUTIONS
 
 def unif_mass(m,lambdaa): # uniform mass distribution
@@ -54,7 +68,7 @@ def peak_mass(m,lambdaa): # gaussian mass distribution
 	p = gaussian(m,lambdaa)
 
 	return p
-
+	
 def bimod_mass(m,lambdaa): # double gaussian mass distribution
 
 	mu1, sigma1, mu2, sigma2, w = lambdaa[:5]
@@ -83,7 +97,7 @@ def peakcut_mass(m,lambdaa): # gaussian mass distribution with high- and low-mas
 	p = gaussian(m,(mu,sigma))/norm
 	
 	return np.where((m > mmax) | (m < mmin), z, p)
-
+	
 def bimodcut_mass(m,lambdaa): # double gaussian mass distribution with high- and low-mass cutoffs
 
 	mu1, sigma1, mu2, sigma2, w, mmin, mmax = lambdaa[:7]
@@ -126,6 +140,8 @@ def bimodcutpsr_mass(m,lambdaa): # double gaussian mass distribution with high- 
 	
 	return np.where((m > mmax) | (m < mmin), z, p)
 
+### BINARY MASS DISTRIBUTIONS
+
 def unif_m1m2(m1,m2,lambdaa): # uniform distribution in masses, subject to m1 >= m2 convention
 
 	if np.isscalar(m1): m1 = np.array([m1])
@@ -149,7 +165,7 @@ def peak_m1m2(m1,m2,lambdaa): # gaussian distribution in masses, subject to m1 >
 	p = peak_mass(m1,lambdaa)*peak_mass(m2,lambdaa)
 
 	return np.where(m1 < m2, z, p)
-
+	
 def bimod_m1m2(m1,m2,lambdaa): # double gaussian distribution in masses, subject to m1 >= m2 convention
 
 	if np.isscalar(m1): m1 = np.array([m1])
@@ -161,7 +177,6 @@ def bimod_m1m2(m1,m2,lambdaa): # double gaussian distribution in masses, subject
 	p = bimod_mass(m1,lambdaa)*bimod_mass(m2,lambdaa)
 	
 	return np.where(m1 < m2, z, p)
-
 
 def power_m1m2(m1,m2,lambdaa): # power law in masses, subject to m1 >= m2 convention
 
@@ -186,7 +201,7 @@ def peakcut_m1m2(m1,m2,lambdaa): # gaussian distribution in masses with high- an
 	p = peakcut_mass(m1,lambdaa)*peakcut_mass(m2,lambdaa)
 
 	return np.where(m1 < m2, z, p)
-
+	
 def bimodcut_m1m2(m1,m2,lambdaa): # double gaussian distribution in masses with high- and low-mass cutoffs, subject to m1 >= m2 convention
 
 	if np.isscalar(m1): m1 = np.array([m1])
@@ -340,7 +355,7 @@ def unif_m1_peakcut_m2(m1,m2,lambdaa): # uniform distribution in bh masses and g
 	p = unif_mass(m1,lambdaa[4:])*peakcut_mass(m2,lambdaa)
 	
 	return np.where(m1 < m2, z, p)
-
+	
 def unif_m1_bimodcut_m2(m1,m2,lambdaa): # uniform distribution in bh masses and double gaussian distribution in ns masses, subject to m1 >= m2 convention
 
 	if np.isscalar(m1): m1 = np.array([m1])
@@ -391,7 +406,7 @@ def unif_m1_peakcut_m2_qpair(m1,m2,lambdaa): # uniform distribution in bh masses
 	p = unif_m1_peakcut_m2(m1,m2,lambdaa)*(m2/m1)**beta
 	
 	return p
-
+	
 def unif_m1_bimodcut_m2_qpair(m1,m2,lambdaa): # uniform distribution in bh masses and double gaussian distribution in ns masses, subject to m1 >= m2 convention and q-dependent pairing
 
 	beta = lambdaa[-1]

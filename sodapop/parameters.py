@@ -2,6 +2,8 @@
 
 import numpy as np
 from scipy.stats import uniform, norm, powerlaw, gaussian_kde
+import requests as rq
+import zipfile
 import os
 
 #MTOV_PATH = 'https://zenodo.org/record/5397808/files/NS_samples.zip?download=1'
@@ -68,6 +70,11 @@ def quad_prior(x,lb=0.,ub=1.): # vectorize this for use as distance function
 	p = 3.*((x-lb)/(ub-lb))**2/(ub-lb)
 	
 	return np.where((x < lb) | (x > ub), z, p)
+
+	#if x < lb or x > ub: val = 0.
+	#else: val = 3.*((x-lb)/(ub-lb))**2/(ub-lb)
+    
+	#return val
 	
 ### BASIC PRIOR DISTRIBUTIONS SAMPLERS
 
@@ -84,8 +91,6 @@ def quad(size=1,lb=0.,ub=1.):
 	return powerlaw.rvs(3.,loc=lb,scale=ub-lb,size=int(size))
 
 ### EOS-INFORMED MMAX DISTRIBUTION
-
-#mmax_dat = np.genfromtxt(MMAX_PATH,names=True,dtype=None,encoding=None,delimiter=',')
 	
 #def mmax_prior(x,mtovs=mtovs,min_mmax=1.5,max_mtov=5.):
 
